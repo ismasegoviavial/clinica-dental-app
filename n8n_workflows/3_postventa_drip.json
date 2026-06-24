@@ -1,0 +1,94 @@
+{
+  "id": "3",
+  "name": "3. Post-Venta: Drip Campaign de Fidelizacion",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "paciente-atendido",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "name": "Webhook Paciente Atendido",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "clinica@tudominio.cl",
+        "toEmail": "={{$json.body.email}}",
+        "subject": "Como fue tu experiencia, {{$json.body.name}}?",
+        "emailType": "html",
+        "message": "<!DOCTYPE html><html><body style='font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px'><div style='background:white;border-radius:12px;padding:30px;border:1px solid #e2e8f0'><h1 style='color:#0284c7'>Gracias por confiar en nosotros!</h1><p style='color:#475569'>Hola <strong>{{$json.body.name}}</strong>, fue un gusto atenderte. Esperamos que estes recuperandote perfectamente.</p><p style='color:#475569'>Podrias dejarnos una resena? Solo toma 30 segundos:</p><div style='text-align:center;margin:25px 0'><a href='https://g.page/tu-clinica/review' style='display:inline-block;background:#0284c7;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold'>Dejar Resena en Google</a></div><p style='color:#475569'>Ademas, por ser nuestro paciente, te regalamos un <strong>10% de descuento</strong> para cualquier familiar. Codigo: <strong>AMIGO10</strong></p><p style='color:#94a3b8;font-size:12px;text-align:center'>Clinica Premium - Av. Providencia 1234 - Santiago</p></div></body></html>"
+      },
+      "name": "DIA 0: Correo Post-Atencion + Resena",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [480, 200]
+    },
+    {
+      "parameters": {
+        "amount": 7,
+        "unit": "days"
+      },
+      "name": "Esperar 7 Dias",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [700, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "clinica@tudominio.cl",
+        "toEmail": "={{$json.body.email}}",
+        "subject": "Guia de Cuidados Post {{$json.body.treatment}} - Semana 1",
+        "emailType": "html",
+        "message": "<!DOCTYPE html><html><body style='font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px'><div style='background:white;border-radius:12px;padding:30px;border:1px solid #e2e8f0'><h1 style='color:#0284c7'>Tu Guia de la Primera Semana</h1><p style='color:#475569'>Hola <strong>{{$json.body.name}}</strong>, ya paso una semana desde tu tratamiento. Como estas?</p><h3 style='color:#0f172a'>Recomendaciones para esta semana:</h3><ul style='color:#475569;line-height:2'><li>Continua con los enjuagues indicados por tu doctor.</li><li>Evita alimentos muy duros por 15 dias mas.</li><li>Recuerda tu control de revision en 30 dias.</li></ul><div style='text-align:center;margin:25px 0'><a href='https://wa.me/56912345678' style='display:inline-block;background:#16a34a;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold'>Agendar Control de 30 Dias</a></div><p style='color:#94a3b8;font-size:12px;text-align:center'>Clinica Premium - Av. Providencia 1234 - Santiago</p></div></body></html>"
+      },
+      "name": "DIA 7: Guia de Cuidados",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [920, 200]
+    },
+    {
+      "parameters": {
+        "amount": 23,
+        "unit": "days"
+      },
+      "name": "Esperar 23 Dias mas",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1140, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "clinica@tudominio.cl",
+        "toEmail": "={{$json.body.email}}",
+        "subject": "Tu control de 30 dias te espera, {{$json.body.name}}",
+        "emailType": "html",
+        "message": "<!DOCTYPE html><html><body style='font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px'><div style='background:white;border-radius:12px;padding:30px;border:1px solid #e2e8f0'><h1 style='color:#0284c7'>Ya pasaron 30 dias</h1><p style='color:#475569'>Hola <strong>{{$json.body.name}}</strong>, es hora de tu control post <strong>{{$json.body.treatment}}</strong>.</p><p style='color:#475569'>Tu control de 30 dias es <strong>sin costo</strong>. Agenda a continuacion.</p><div style='text-align:center;margin:25px 0'><a href='https://wa.me/56912345678' style='display:inline-block;background:#0284c7;color:white;padding:15px 30px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:1.1rem'>Agendar Mi Control Gratis</a></div><p style='color:#94a3b8;font-size:12px;text-align:center'>Clinica Premium - Av. Providencia 1234 - Santiago</p></div></body></html>"
+      },
+      "name": "DIA 30: Recordatorio Control",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1360, 200]
+    }
+  ],
+  "connections": {
+    "Webhook Paciente Atendido": {
+      "main": [[{ "node": "DIA 0: Correo Post-Atencion + Resena", "type": "main", "index": 0 }]]
+    },
+    "DIA 0: Correo Post-Atencion + Resena": {
+      "main": [[{ "node": "Esperar 7 Dias", "type": "main", "index": 0 }]]
+    },
+    "Esperar 7 Dias": {
+      "main": [[{ "node": "DIA 7: Guia de Cuidados", "type": "main", "index": 0 }]]
+    },
+    "DIA 7: Guia de Cuidados": {
+      "main": [[{ "node": "Esperar 23 Dias mas", "type": "main", "index": 0 }]]
+    },
+    "Esperar 23 Dias mas": {
+      "main": [[{ "node": "DIA 30: Recordatorio Control", "type": "main", "index": 0 }]]
+    }
+  }
+}
